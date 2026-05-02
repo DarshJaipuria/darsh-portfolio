@@ -20,7 +20,7 @@ export default function Skills() {
   const [clickedSkill, setClickedSkill] = useState(null);
   const [rotation, setRotation] = useState(0);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true); // default true — avoids 500px orbit flashing on mobile before hydration
 
   const titleRef = useRef(null);
   const orbitRef = useRef(null);
@@ -29,13 +29,16 @@ export default function Skills() {
   const rotRef = useRef(0);
   const pausedRef = useRef(false);
 
-  // Detect mobile
+  // Detect mobile — default true to avoid SSR flash with oversized orbit
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
+  // Track touch start Y to distinguish tap vs scroll
+  const touchStartY = useRef(0);
 
   // Orbit auto-rotation — always running (mobile + desktop)
   useEffect(() => {
@@ -306,13 +309,15 @@ export default function Skills() {
                       left: `calc(50% + ${x}px)`,
                       top: `calc(50% + ${y}px)`,
                       transform: `translate(-50%, -50%) rotate(${-rotation}deg)`,
-                      touchAction: 'none',
+                      // FIX: do NOT set touchAction:none — that blocks page scroll
                     }}
                     onMouseEnter={() => setActiveSkill(skill)}
                     onMouseLeave={() => setActiveSkill(null)}
-                    onTouchStart={(e) => {
-                      e.stopPropagation();
-                      handleSkillClick(skill);
+                    onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
+                    onTouchEnd={(e) => {
+                      // Only treat as tap if finger barely moved (not a scroll)
+                      const dy = Math.abs(e.changedTouches[0].clientY - touchStartY.current);
+                      if (dy < 10) handleSkillClick(skill);
                     }}
                     onClick={() => handleSkillClick(skill)}
                   >

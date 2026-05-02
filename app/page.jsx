@@ -94,9 +94,9 @@ export default function Home() {
   useEffect(() => {
     if (!loaded) return;
 
-    // FIX: Skip Lenis on mobile — native scroll works fine
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    if (isMobile) return;
+    // FIX: Skip Lenis on any touch device — native scroll works fine
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) return;
 
     import('lenis').then(({ default: Lenis }) => {
       const lenis = new Lenis({
