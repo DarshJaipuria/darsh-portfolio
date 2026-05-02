@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import Loader from '../components/Loader';
 import CustomCursor from '../components/CustomCursor';
 import Navigation from '../components/Navigation';
@@ -49,11 +51,13 @@ function useDragScroll() {
     let startScroll = 0;
 
     const onMouseDown = (e) => {
+      // Middle mouse (button 1) or hold Alt + left click
       if (e.button !== 1 && !(e.button === 0 && e.altKey)) return;
       e.preventDefault();
       isDragging = true;
       startY = e.clientY;
       startScroll = window.scrollY;
+      document.body.style.cursor = 'grabbing';
       document.body.style.userSelect = 'none';
     };
 
@@ -66,12 +70,14 @@ function useDragScroll() {
     const onMouseUp = () => {
       if (!isDragging) return;
       isDragging = false;
+      document.body.style.cursor = 'none';
       document.body.style.userSelect = '';
     };
 
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
+    // Prevent middle-click auto-scroll from opening scroll mode
     window.addEventListener('auxclick', (e) => { if (e.button === 1) e.preventDefault(); });
 
     return () => {
@@ -83,26 +89,14 @@ function useDragScroll() {
 }
 
 export default function Home() {
-  // FIX 1 & 2: Show loader only on first visit via sessionStorage
   const [loaded, setLoaded] = useState(false);
-  const [showLoader, setShowLoader] = useState(false);
   const glitchMode = useEasterEgg();
   useDragScroll();
 
   useEffect(() => {
-    const hasLoaded = sessionStorage.getItem('hasLoaded');
-    if (!hasLoaded) {
-      setShowLoader(true);
-      sessionStorage.setItem('hasLoaded', 'true');
-    } else {
-      // Skip loader on subsequent navigations
-      setLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
     if (!loaded) return;
 
+    // FIX: Skip Lenis on any touch device — native scroll works fine
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouch) return;
 
@@ -122,6 +116,7 @@ export default function Home() {
 
   return (
     <>
+      {/* Easter egg global glitch CSS */}
       <style>{`
         @keyframes globalGlitch {
           0%   { filter: none; transform: none; }
@@ -164,6 +159,7 @@ export default function Home() {
         }
       `}</style>
 
+      {/* Easter egg notification */}
       {glitchMode && (
         <div
           className="fixed top-20 left-1/2 z-[99999] -translate-x-1/2 px-6 py-3 rounded-full font-mono text-xs tracking-widest text-white"
@@ -178,9 +174,10 @@ export default function Home() {
       )}
 
       <CustomCursor />
-      {showLoader && <Loader onComplete={() => { setShowLoader(false); setLoaded(true); }} />}
+      {!loaded && <Loader onComplete={() => setLoaded(true)} />}
 
       <div className={`transition-opacity duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}>
+        {/* Noise grain */}
         <div
           className="fixed inset-0 pointer-events-none z-50"
           style={{
@@ -196,6 +193,7 @@ export default function Home() {
           <Projects />
           <Skills />
           <GitHubStats />
+          <CertificatesCTA />
           <Contact />
         </main>
 
@@ -209,5 +207,49 @@ export default function Home() {
         </footer>
       </div>
     </>
+  );
+}
+
+function CertificatesCTA() {
+  const router = useRouter();
+  return (
+    <section className="relative py-24 px-6" style={{ background: '#080810' }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(168,85,247,0.07), transparent 70%)' }} />
+      <motion.div
+        className="relative z-10 max-w-2xl mx-auto text-center rounded-2xl p-12"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        style={{
+          background: 'rgba(255,255,255,0.025)',
+          border: '1px solid rgba(168,85,247,0.18)',
+          boxShadow: '0 0 40px rgba(168,85,247,0.07)',
+        }}
+      >
+        <span className="text-xs font-mono tracking-[0.5em] text-purple-400/50 block mb-4">VERIFIED LEARNING</span>
+        <h2
+          className="font-black mb-4"
+          style={{
+            fontFamily: 'Orbitron, monospace',
+            fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
+            background: 'linear-gradient(135deg, #a855f7, #3b82f6)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}
+        >
+          CERTIFICATES
+        </h2>
+        <p className="text-base mb-8" style={{ color: 'rgba(226,232,240,0.45)', fontFamily: 'Rajdhani, sans-serif' }}>
+          Explore my certifications and achievements — a collection of verified certifications in AI, Data Science, and development.
+        </p>
+        <button
+          onClick={() => router.push('/certificates')}
+          className="btn-cyber-solid px-8 py-3 text-sm rounded-lg"
+          style={{ cursor: 'none', fontFamily: 'Orbitron, monospace' }}
+        >
+          VIEW CERTIFICATES →
+        </button>
+      </motion.div>
+    </section>
   );
 }
