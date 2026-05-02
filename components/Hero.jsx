@@ -378,13 +378,6 @@ export default function Hero() {
           >
             Contact Me
           </button>
-          <button
-            onClick={() => router.push('/about')}
-            className="btn-cyber rounded-none px-8 py-3 text-sm"
-            style={{ cursor: 'none', borderColor: 'rgba(236,72,153,0.6)', color: '#ec4899' }}
-          >
-            Know Me &amp; View CV
-          </button>
         </motion.div>
 
         {/* Social Icons */}

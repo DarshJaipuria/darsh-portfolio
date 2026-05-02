@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV_ITEMS = [
-  { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
   { label: 'Skills', href: '#skills' },
   { label: 'GitHub', href: '#github' },
@@ -15,6 +15,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -85,6 +86,14 @@ export default function Navigation() {
             </button>
           ))}
 
+          <button
+            onClick={() => router.push('/about')}
+            className="btn-cyber text-xs py-2 px-4"
+            style={{ cursor: 'none', fontFamily: 'Orbitron, monospace', borderColor: 'rgba(236,72,153,0.6)', color: '#ec4899' }}
+          >
+            Know Me & CV
+          </button>
+
           <a
             href="mailto:darshjaipuria@gmail.com"
             className="btn-cyber text-xs py-2 px-4"
@@ -143,6 +152,16 @@ export default function Navigation() {
                 {item.label.toUpperCase()}
               </motion.button>
             ))}
+            <motion.button
+              onClick={() => { setMenuOpen(false); router.push('/about'); }}
+              className="text-3xl font-black tracking-widest"
+              style={{ fontFamily: 'Orbitron, monospace', cursor: 'none', color: '#ec4899' }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: NAV_ITEMS.length * 0.07 }}
+            >
+              KNOW ME & CV
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
