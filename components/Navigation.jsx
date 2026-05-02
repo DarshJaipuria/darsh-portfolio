@@ -86,7 +86,7 @@ export default function Navigation() {
           ))}
 
           <a
-            href="mailto:darshjaipuria6a@gmail.com"
+            href="mailto:darshjaipuria@gmail.com"
             className="btn-cyber text-xs py-2 px-4"
             style={{ cursor: 'none', fontFamily: 'Orbitron, monospace' }}
           >

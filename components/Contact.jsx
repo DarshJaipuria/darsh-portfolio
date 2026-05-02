@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-const EMAIL = 'darshjaipuria6a@gmail.com';
+const EMAIL = 'darshjaipuria@gmail.com';
 
 function FloatingParticles() {
   return (

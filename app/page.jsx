@@ -143,7 +143,7 @@ export default function Home() {
 
         <footer className="py-8 text-center border-t border-purple-900/20">
           <p className="font-mono text-xs text-purple-400/30 tracking-[0.3em]">
-            DARSH.EXE — RUNNING ON PASSION + CAFFEINE © 2026
+            DARSH.EXE — RUNNING ON PASSION + CAFFEINE © 26
           </p>
           <p className="font-mono text-xs text-purple-400/15 tracking-widest mt-1" style={{ fontSize: '0.6rem' }}>
             [ TRY TYPING "DARSH" ]
