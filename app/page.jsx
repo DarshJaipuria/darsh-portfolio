@@ -49,13 +49,11 @@ function useDragScroll() {
     let startScroll = 0;
 
     const onMouseDown = (e) => {
-      // Middle mouse (button 1) or hold Alt + left click
       if (e.button !== 1 && !(e.button === 0 && e.altKey)) return;
       e.preventDefault();
       isDragging = true;
       startY = e.clientY;
       startScroll = window.scrollY;
-      document.body.style.cursor = 'grabbing';
       document.body.style.userSelect = 'none';
     };
 
@@ -68,14 +66,12 @@ function useDragScroll() {
     const onMouseUp = () => {
       if (!isDragging) return;
       isDragging = false;
-      document.body.style.cursor = 'none';
       document.body.style.userSelect = '';
     };
 
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
-    // Prevent middle-click auto-scroll from opening scroll mode
     window.addEventListener('auxclick', (e) => { if (e.button === 1) e.preventDefault(); });
 
     return () => {
@@ -87,14 +83,26 @@ function useDragScroll() {
 }
 
 export default function Home() {
+  // FIX 1 & 2: Show loader only on first visit via sessionStorage
   const [loaded, setLoaded] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const glitchMode = useEasterEgg();
   useDragScroll();
 
   useEffect(() => {
+    const hasLoaded = sessionStorage.getItem('hasLoaded');
+    if (!hasLoaded) {
+      setShowLoader(true);
+      sessionStorage.setItem('hasLoaded', 'true');
+    } else {
+      // Skip loader on subsequent navigations
+      setLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!loaded) return;
 
-    // FIX: Skip Lenis on any touch device — native scroll works fine
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouch) return;
 
@@ -114,7 +122,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Easter egg global glitch CSS */}
       <style>{`
         @keyframes globalGlitch {
           0%   { filter: none; transform: none; }
@@ -157,7 +164,6 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Easter egg notification */}
       {glitchMode && (
         <div
           className="fixed top-20 left-1/2 z-[99999] -translate-x-1/2 px-6 py-3 rounded-full font-mono text-xs tracking-widest text-white"
@@ -172,10 +178,9 @@ export default function Home() {
       )}
 
       <CustomCursor />
-      {!loaded && <Loader onComplete={() => setLoaded(true)} />}
+      {showLoader && <Loader onComplete={() => { setShowLoader(false); setLoaded(true); }} />}
 
       <div className={`transition-opacity duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}>
-        {/* Noise grain */}
         <div
           className="fixed inset-0 pointer-events-none z-50"
           style={{

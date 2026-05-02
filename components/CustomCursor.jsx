@@ -9,13 +9,19 @@ export default function CustomCursor() {
   const ring = useRef({ x: -100, y: -100 });
   const [state, setState] = useState('default'); // default | hover | text | button
 
+  // FIX 3: Add/remove cursor-none class on body so cursor is only hidden when this component is active
+  useEffect(() => {
+    document.body.classList.add('custom-cursor-active');
+    return () => {
+      document.body.classList.remove('custom-cursor-active');
+    };
+  }, []);
+
   useEffect(() => {
     const onMove = (e) => {
       pos.current = { x: e.clientX, y: e.clientY };
 
-      // Magnetic pull toward nearby interactive elements
       const targets = document.querySelectorAll('button, a, [data-magnetic]');
-      let pulled = false;
       targets.forEach((el) => {
         const rect = el.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
@@ -28,7 +34,6 @@ export default function CustomCursor() {
             x: e.clientX - dx * 0.18,
             y: e.clientY - dy * 0.18,
           };
-          pulled = true;
         }
       });
     };
@@ -51,7 +56,6 @@ export default function CustomCursor() {
     window.addEventListener('mousemove', onMove, { passive: true });
     attachListeners();
 
-    // Re-attach on DOM changes
     const obs = new MutationObserver(attachListeners);
     obs.observe(document.body, { childList: true, subtree: true });
 

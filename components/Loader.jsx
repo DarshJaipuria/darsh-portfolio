@@ -19,7 +19,7 @@ export default function Loader({ onComplete }) {
   const [chars, setChars] = useState('');
   const [charIndex, setCharIndex] = useState(0);
 
-  // Typewriter per line
+  // Typewriter per line — FIX 2: faster (15ms vs 28ms)
   useEffect(() => {
     if (currentLine >= LOADING_LINES.length) return;
 
@@ -28,15 +28,15 @@ export default function Loader({ onComplete }) {
       const t = setTimeout(() => {
         setChars((p) => p + line[charIndex]);
         setCharIndex((p) => p + 1);
-      }, 28);
+      }, 8);
       return () => clearTimeout(t);
     } else {
-      // Line done — move to next after short pause
+      // FIX 2: shorter pause between lines (100ms vs 250ms)
       const t = setTimeout(() => {
         setCurrentLine((p) => p + 1);
         setChars('');
         setCharIndex(0);
-      }, 250);
+      }, 50);
       return () => clearTimeout(t);
     }
   }, [currentLine, charIndex]);
@@ -47,23 +47,24 @@ export default function Loader({ onComplete }) {
     const interval = setInterval(() => {
       setProgress((p) => {
         if (p >= target) { clearInterval(interval); return p; }
-        return p + 0.8;
+        return p + 1.2;
       });
     }, 16);
     return () => clearInterval(interval);
   }, [currentLine]);
 
-  // Trigger exit
+  // FIX 2: Trigger exit faster (200ms vs 600ms)
   useEffect(() => {
     if (currentLine >= LOADING_LINES.length) {
-      const t = setTimeout(() => setDone(true), 600);
+      const t = setTimeout(() => setDone(true), 100);
       return () => clearTimeout(t);
     }
   }, [currentLine]);
 
+  // FIX 2: Call onComplete faster (400ms vs 800ms)
   useEffect(() => {
     if (done) {
-      const t = setTimeout(onComplete, 800);
+      const t = setTimeout(onComplete, 200);
       return () => clearTimeout(t);
     }
   }, [done, onComplete]);
@@ -75,7 +76,7 @@ export default function Loader({ onComplete }) {
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-dark-base overflow-hidden"
           style={{ background: '#050505' }}
           exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
         >
           {/* Scanline sweep */}
           <div
@@ -113,7 +114,7 @@ export default function Loader({ onComplete }) {
               className="mb-10 text-center"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.4 }}
             >
               <div
                 className="text-5xl font-black tracking-wider mb-1"
@@ -140,7 +141,7 @@ export default function Loader({ onComplete }) {
               className="rounded-lg overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.1 }}
               style={{
                 background: 'rgba(10,10,20,0.9)',
                 border: '1px solid rgba(168,85,247,0.2)',
