@@ -23,6 +23,9 @@
 html {
   scroll-behavior: smooth;
   background: var(--dark-base);
+  /* FIX: allow vertical scroll on mobile */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
@@ -30,7 +33,21 @@ body {
   color: #e2e8f0;
   font-family: 'Rajdhani', sans-serif;
   overflow-x: hidden;
+  /* FIX: allow touch scroll, no overflow-y hidden */
+  overflow-y: auto;
+  touch-action: pan-y;
   cursor: none;
+}
+
+/* Restore pointer cursor on mobile (no custom cursor) */
+@media (max-width: 767px) {
+  body {
+    cursor: auto;
+  }
+  .btn-cyber,
+  .btn-cyber-solid {
+    cursor: pointer;
+  }
 }
 
 /* Custom scrollbar */

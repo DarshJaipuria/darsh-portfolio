@@ -23,7 +23,6 @@ function useEasterEgg() {
       if (buffer.current === 'darsh') {
         buffer.current = '';
         setGlitchMode(true);
-        // Glitch the entire page
         document.body.classList.add('easter-glitch');
         clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => {
@@ -39,12 +38,66 @@ function useEasterEgg() {
   return glitchMode;
 }
 
+// FIX: Middle-mouse / left-button drag scroll (desktop only)
+function useDragScroll() {
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+
+    let isDragging = false;
+    let startY = 0;
+    let startScroll = 0;
+
+    const onMouseDown = (e) => {
+      // Middle mouse (button 1) or hold Alt + left click
+      if (e.button !== 1 && !(e.button === 0 && e.altKey)) return;
+      e.preventDefault();
+      isDragging = true;
+      startY = e.clientY;
+      startScroll = window.scrollY;
+      document.body.style.cursor = 'grabbing';
+      document.body.style.userSelect = 'none';
+    };
+
+    const onMouseMove = (e) => {
+      if (!isDragging) return;
+      const delta = startY - e.clientY;
+      window.scrollTo({ top: startScroll + delta, behavior: 'instant' });
+    };
+
+    const onMouseUp = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      document.body.style.cursor = 'none';
+      document.body.style.userSelect = '';
+    };
+
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    // Prevent middle-click auto-scroll from opening scroll mode
+    window.addEventListener('auxclick', (e) => { if (e.button === 1) e.preventDefault(); });
+
+    return () => {
+      window.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+}
+
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
   const glitchMode = useEasterEgg();
+  useDragScroll();
 
   useEffect(() => {
     if (!loaded) return;
+
+    // FIX: Skip Lenis on mobile — native scroll works fine
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isMobile) return;
+
     import('lenis').then(({ default: Lenis }) => {
       const lenis = new Lenis({
         duration: 1.4,

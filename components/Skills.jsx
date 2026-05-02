@@ -15,37 +15,13 @@ const SKILLS = [
   { name: 'Data Quality',    level: 78, color: '#10b981', icon: '✅', desc: 'Data cleaning, validation, preprocessing, QA.', category: 'Data',     projects: [] },
 ];
 
-function SkillBar({ skill, index }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-50px' });
-  return (
-    <motion.div ref={ref} initial={{ opacity: 0, x: -30 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: index * 0.07, duration: 0.6 }} className="group">
-      <div className="flex items-center justify-between mb-1.5">
-        <div className="flex items-center gap-2">
-          <span className="text-base">{skill.icon}</span>
-          <span className="text-sm font-bold" style={{ fontFamily: 'Rajdhani, sans-serif', color: '#e2e8f0' }}>{skill.name}</span>
-          <span className="text-xs px-1.5 py-0.5 rounded font-mono" style={{ background: `${skill.color}15`, color: `${skill.color}80`, fontSize: '0.6rem' }}>{skill.category}</span>
-        </div>
-        <span className="text-xs font-mono text-slate-500">{skill.level}%</span>
-      </div>
-      <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-        <motion.div
-          className="h-full rounded-full"
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${skill.level}%` } : { width: 0 }}
-          transition={{ delay: index * 0.07 + 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          style={{ background: `linear-gradient(90deg, ${skill.color}, ${skill.color}80)`, boxShadow: `0 0 8px ${skill.color}50` }}
-        />
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Skills() {
   const [activeSkill, setActiveSkill] = useState(null);
   const [clickedSkill, setClickedSkill] = useState(null);
   const [rotation, setRotation] = useState(0);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+
   const titleRef = useRef(null);
   const orbitRef = useRef(null);
   const titleInView = useInView(titleRef, { once: true, margin: '-80px' });
@@ -53,12 +29,22 @@ export default function Skills() {
   const rotRef = useRef(0);
   const pausedRef = useRef(false);
 
-  // Orbit rotation
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // Orbit auto-rotation — always running (mobile + desktop)
   useEffect(() => {
     let last = 0;
+    // Mobile rotates faster for visible motion
+    const speed = isMobile ? 0.012 : 0.005;
     const animate = (time) => {
       if (!pausedRef.current) {
-        rotRef.current += (time - last) * 0.005;
+        rotRef.current += (time - last) * speed;
         setRotation(rotRef.current);
       }
       last = time;
@@ -66,10 +52,11 @@ export default function Skills() {
     };
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
-  }, []);
+  }, [isMobile]);
 
-  // Mouse parallax on orbit
+  // Mouse parallax — desktop only
   useEffect(() => {
+    if (isMobile) return;
     const onMove = (e) => {
       if (!orbitRef.current) return;
       const rect = orbitRef.current.getBoundingClientRect();
@@ -82,7 +69,7 @@ export default function Skills() {
     };
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMove);
-  }, []);
+  }, [isMobile]);
 
   const handleSkillClick = (skill) => {
     setClickedSkill(prev => prev?.name === skill.name ? null : skill);
@@ -90,6 +77,10 @@ export default function Skills() {
   };
 
   const displaySkill = clickedSkill || activeSkill;
+
+  // Responsive orbit size
+  const orbitSize = isMobile ? 300 : 500;
+  const orbitRadius = isMobile ? 120 : 200;
 
   return (
     <section
@@ -122,18 +113,17 @@ export default function Skills() {
           </motion.div>
         </div>
 
-        {/* Desktop orbit */}
+        {/* Desktop layout: orbit + detail panel side by side */}
         <div className="hidden lg:flex items-center justify-center gap-16">
           <div
             ref={orbitRef}
             className="relative flex-shrink-0"
             style={{
-              width: '500px', height: '500px',
+              width: `${orbitSize}px`, height: `${orbitSize}px`,
               transform: `perspective(800px) rotateX(${mouseOffset.y * 0.3}deg) rotateY(${mouseOffset.x * 0.3}deg)`,
               transition: 'transform 0.1s ease',
             }}
           >
-            {/* Rings */}
             {[400, 280, 160].map((size, i) => (
               <div
                 key={i}
@@ -147,7 +137,6 @@ export default function Skills() {
               />
             ))}
 
-            {/* Center core — expands with clicked skill */}
             <motion.div
               className="absolute rounded-full flex flex-col items-center justify-center z-20 overflow-hidden"
               style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
@@ -181,7 +170,6 @@ export default function Skills() {
               </div>
             </motion.div>
 
-            {/* Skill nodes */}
             <div
               className="absolute inset-0"
               style={{
@@ -190,8 +178,8 @@ export default function Skills() {
             >
               {SKILLS.map((skill, i) => {
                 const angle = (i / SKILLS.length) * 2 * Math.PI - Math.PI / 2;
-                const x = Math.cos(angle) * 200;
-                const y = Math.sin(angle) * 200;
+                const x = Math.cos(angle) * orbitRadius;
+                const y = Math.sin(angle) * orbitRadius;
                 const isActive = activeSkill?.name === skill.name || clickedSkill?.name === skill.name;
                 const glowSize = (skill.level / 100) * 20;
 
@@ -239,87 +227,211 @@ export default function Skills() {
 
           {/* Detail panel */}
           <div className="flex-1 max-w-sm">
-            <AnimatePresence mode="wait">
-              {displaySkill ? (
-                <motion.div
-                  key={displaySkill.name}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.25 }}
-                  className="p-6 rounded-2xl"
-                  style={{
-                    background: `radial-gradient(ellipse at top, ${displaySkill.color}12, rgba(10,10,20,0.9))`,
-                    border: `1px solid ${displaySkill.color}30`,
-                    backdropFilter: 'blur(20px)',
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-4xl">{displaySkill.icon}</span>
-                    <div>
-                      <h3 className="text-xl font-black" style={{ fontFamily: 'Orbitron, monospace', color: displaySkill.color }}>{displaySkill.name}</h3>
-                      <span className="text-xs font-mono tracking-widest" style={{ color: `${displaySkill.color}70` }}>{displaySkill.category}</span>
-                    </div>
-                  </div>
-                  <p className="text-sm leading-relaxed mb-4 text-slate-400" style={{ fontFamily: 'Rajdhani, sans-serif' }}>{displaySkill.desc}</p>
-
-                  {displaySkill.projects.length > 0 && (
-                    <div className="mb-4">
-                      <p className="text-xs font-mono text-slate-600 mb-2 tracking-wider">USED IN</p>
-                      <div className="flex gap-2 flex-wrap">
-                        {displaySkill.projects.map(p => (
-                          <span key={p} className="text-xs px-2 py-0.5 rounded font-mono" style={{ background: `${displaySkill.color}10`, color: displaySkill.color, border: `1px solid ${displaySkill.color}20` }}>{p}</span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div>
-                    <div className="flex justify-between text-xs font-mono mb-1.5">
-                      <span style={{ color: `${displaySkill.color}70` }}>Proficiency</span>
-                      <span style={{ color: displaySkill.color }}>{displaySkill.level}%</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                      <motion.div
-                        className="h-full rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${displaySkill.level}%` }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ background: `linear-gradient(90deg, ${displaySkill.color}, ${displaySkill.color}80)`, boxShadow: `0 0 10px ${displaySkill.color}70` }}
-                      />
-                    </div>
-                  </div>
-
-                  {clickedSkill && (
-                    <button
-                      onClick={() => { setClickedSkill(null); pausedRef.current = false; }}
-                      className="mt-4 text-xs font-mono text-slate-500 hover:text-white transition-colors"
-                      style={{ cursor: 'none' }}
-                    >
-                      ← deselect
-                    </button>
-                  )}
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="p-6 rounded-2xl text-center"
-                  style={{ background: 'rgba(168,85,247,0.04)', border: '1px solid rgba(168,85,247,0.1)' }}
-                >
-                  <div className="text-4xl mb-3">👆</div>
-                  <p className="text-sm text-slate-500 font-mono">Hover or click a skill node</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <SkillDetailPanel displaySkill={displaySkill} clickedSkill={clickedSkill} onDeselect={() => { setClickedSkill(null); pausedRef.current = false; }} />
           </div>
         </div>
 
-        {/* Mobile bar list */}
-        <div className="lg:hidden space-y-4">
-          {SKILLS.map((skill, i) => <SkillBar key={skill.name} skill={skill} index={i} />)}
+        {/* Mobile layout: orbit centered + detail below */}
+        <div className="lg:hidden flex flex-col items-center gap-8">
+          {/* Tap hint */}
+          <p className="text-xs font-mono text-purple-400/40 tracking-widest">TAP A NODE TO INSPECT</p>
+
+          {/* Mobile orbit */}
+          <div
+            className="relative flex-shrink-0"
+            style={{ width: `${orbitSize}px`, height: `${orbitSize}px` }}
+          >
+            {/* Rings — scaled for mobile */}
+            {[240, 168, 96].map((size, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                  width: `${size}px`, height: `${size}px`,
+                  top: '50%', left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  border: `1px ${i === 0 ? 'dashed' : 'solid'} rgba(168,85,247,${0.06 + i * 0.03})`,
+                }}
+              />
+            ))}
+
+            {/* Center core */}
+            <motion.div
+              className="absolute rounded-full flex flex-col items-center justify-center z-20 overflow-hidden"
+              style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+              animate={{ width: clickedSkill ? 80 : 56, height: clickedSkill ? 80 : 56 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+            >
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: clickedSkill
+                    ? `radial-gradient(circle, ${clickedSkill.color}40, ${clickedSkill.color}10)`
+                    : 'radial-gradient(circle, rgba(168,85,247,0.3), rgba(168,85,247,0.05))',
+                  border: `2px solid ${clickedSkill ? clickedSkill.color + '70' : 'rgba(168,85,247,0.5)'}`,
+                  boxShadow: clickedSkill
+                    ? `0 0 20px ${clickedSkill.color}50`
+                    : '0 0 20px rgba(168,85,247,0.3)',
+                  transition: 'all 0.4s',
+                }}
+              />
+              <div className="relative z-10 text-center px-1">
+                {clickedSkill ? (
+                  <>
+                    <div className="text-base">{clickedSkill.icon}</div>
+                  </>
+                ) : (
+                  <span style={{ fontFamily: 'Orbitron, monospace', color: '#a855f7', fontSize: '0.45rem', fontWeight: 900, letterSpacing: '0.1em' }}>DARSH</span>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Rotating skill nodes */}
+            <div
+              className="absolute inset-0"
+              style={{ transform: `rotate(${rotation}deg)` }}
+            >
+              {SKILLS.map((skill, i) => {
+                const angle = (i / SKILLS.length) * 2 * Math.PI - Math.PI / 2;
+                const x = Math.cos(angle) * orbitRadius;
+                const y = Math.sin(angle) * orbitRadius;
+                const isActive = activeSkill?.name === skill.name || clickedSkill?.name === skill.name;
+                const glowSize = (skill.level / 100) * 14;
+
+                return (
+                  <div
+                    key={skill.name}
+                    className="absolute flex flex-col items-center"
+                    style={{
+                      left: `calc(50% + ${x}px)`,
+                      top: `calc(50% + ${y}px)`,
+                      transform: `translate(-50%, -50%) rotate(${-rotation}deg)`,
+                      touchAction: 'none',
+                    }}
+                    onMouseEnter={() => setActiveSkill(skill)}
+                    onMouseLeave={() => setActiveSkill(null)}
+                    onTouchStart={(e) => {
+                      e.stopPropagation();
+                      handleSkillClick(skill);
+                    }}
+                    onClick={() => handleSkillClick(skill)}
+                  >
+                    <motion.div
+                      whileTap={{ scale: 0.85 }}
+                      className="w-9 h-9 rounded-full flex items-center justify-center text-base"
+                      style={{
+                        background: isActive ? `radial-gradient(circle, ${skill.color}40, ${skill.color}15)` : 'rgba(10,10,20,0.9)',
+                        border: `2px solid ${isActive ? skill.color : skill.color + '50'}`,
+                        boxShadow: isActive ? `0 0 ${glowSize}px ${skill.color}70` : 'none',
+                        transition: 'all 0.3s',
+                      }}
+                    >
+                      {skill.icon}
+                    </motion.div>
+                    <span
+                      className="mt-1 whitespace-nowrap"
+                      style={{
+                        fontFamily: 'Share Tech Mono, monospace', fontSize: '0.5rem',
+                        color: isActive ? skill.color : 'rgba(226,232,240,0.25)',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      {skill.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Detail panel below orbit on mobile */}
+          <div className="w-full max-w-sm">
+            <SkillDetailPanel
+              displaySkill={displaySkill}
+              clickedSkill={clickedSkill}
+              onDeselect={() => { setClickedSkill(null); pausedRef.current = false; }}
+            />
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function SkillDetailPanel({ displaySkill, clickedSkill, onDeselect }) {
+  return (
+    <AnimatePresence mode="wait">
+      {displaySkill ? (
+        <motion.div
+          key={displaySkill.name}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.25 }}
+          className="p-6 rounded-2xl"
+          style={{
+            background: `radial-gradient(ellipse at top, ${displaySkill.color}12, rgba(10,10,20,0.9))`,
+            border: `1px solid ${displaySkill.color}30`,
+            backdropFilter: 'blur(20px)',
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-4xl">{displaySkill.icon}</span>
+            <div>
+              <h3 className="text-xl font-black" style={{ fontFamily: 'Orbitron, monospace', color: displaySkill.color }}>{displaySkill.name}</h3>
+              <span className="text-xs font-mono tracking-widest" style={{ color: `${displaySkill.color}70` }}>{displaySkill.category}</span>
+            </div>
+          </div>
+          <p className="text-sm leading-relaxed mb-4 text-slate-400" style={{ fontFamily: 'Rajdhani, sans-serif' }}>{displaySkill.desc}</p>
+
+          {displaySkill.projects.length > 0 && (
+            <div className="mb-4">
+              <p className="text-xs font-mono text-slate-600 mb-2 tracking-wider">USED IN</p>
+              <div className="flex gap-2 flex-wrap">
+                {displaySkill.projects.map(p => (
+                  <span key={p} className="text-xs px-2 py-0.5 rounded font-mono" style={{ background: `${displaySkill.color}10`, color: displaySkill.color, border: `1px solid ${displaySkill.color}20` }}>{p}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div>
+            <div className="flex justify-between text-xs font-mono mb-1.5">
+              <span style={{ color: `${displaySkill.color}70` }}>Proficiency</span>
+              <span style={{ color: displaySkill.color }}>{displaySkill.level}%</span>
+            </div>
+            <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+              <motion.div
+                className="h-full rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${displaySkill.level}%` }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                style={{ background: `linear-gradient(90deg, ${displaySkill.color}, ${displaySkill.color}80)`, boxShadow: `0 0 10px ${displaySkill.color}70` }}
+              />
+            </div>
+          </div>
+
+          {clickedSkill && (
+            <button
+              onClick={onDeselect}
+              className="mt-4 text-xs font-mono text-slate-500 hover:text-white transition-colors"
+              style={{ cursor: 'pointer' }}
+            >
+              ← deselect
+            </button>
+          )}
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="p-6 rounded-2xl text-center"
+          style={{ background: 'rgba(168,85,247,0.04)', border: '1px solid rgba(168,85,247,0.1)' }}
+        >
+          <div className="text-4xl mb-3">👆</div>
+          <p className="text-sm text-slate-500 font-mono">Tap a skill node to inspect</p>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
