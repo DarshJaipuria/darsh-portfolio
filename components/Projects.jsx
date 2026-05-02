@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 
 const PROJECTS = [
@@ -48,7 +49,7 @@ const PROJECTS = [
   },
 ];
 
-function TiltCard({ project, onClick, onHover }) {
+function TiltCard({ project, onClick, onHover, onShowcase }) {
   const cardRef = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
@@ -158,6 +159,21 @@ function TiltCard({ project, onClick, onHover }) {
               GitHub
             </a>
           </div>
+          {project.id === 3 && onShowcase && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onShowcase(); }}
+              className="mt-4 w-full py-2 rounded-lg text-xs font-black tracking-widest text-white transition-all hover:-translate-y-0.5"
+              style={{
+                fontFamily: 'Orbitron, monospace',
+                background: 'linear-gradient(135deg, rgba(236,72,153,0.2), rgba(168,85,247,0.2))',
+                border: '1px solid rgba(236,72,153,0.35)',
+                color: '#ec4899',
+                cursor: 'none',
+              }}
+            >
+              ⚡ FULL SHOWCASE →
+            </button>
+          )}
         </div>
       </div>
     </motion.div>
@@ -281,6 +297,7 @@ export default function Projects() {
   const [bgProject, setBgProject] = useState(null);
   const titleRef = useRef(null);
   const titleInView = useInView(titleRef, { once: true, margin: '-80px' });
+  const router = useRouter();
 
   return (
     <section
@@ -322,7 +339,7 @@ export default function Projects() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" onMouseLeave={() => setBgProject(null)}>
           {PROJECTS.map(project => (
             <div key={project.id} onMouseEnter={() => setBgProject(project)}>
-              <TiltCard project={project} onClick={setSelected} onHover={setBgProject} />
+              <TiltCard project={project} onClick={setSelected} onHover={setBgProject} onShowcase={project.id === 3 ? () => router.push('/projects/nitro-rush') : undefined} />
             </div>
           ))}
         </div>
