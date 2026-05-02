@@ -1,132 +1,95 @@
 # ⚡ DARSH JAIPURIA — Portfolio
 
-A futuristic, interactive, animated digital identity built with Next.js, Framer Motion, Three.js, and GSAP.
+A high-performance, interactive portfolio designed to feel like a **living system** — combining 3D visuals, motion design, and real-time interactivity.
+
+Built to showcase not just projects, but **how I think, build, and iterate**.
+
+---
+
+## 🧠 About Me
+
+Started coding in **Class 2 with Scratch**, building simple games out of curiosity.
+
+Explored **QBASIC, HTML, and self-learning beyond school curriculum**, eventually discovering Python and choosing it early for long-term alignment with AI and Data Science.
+
+Built multiple projects through Classes 10–12 — despite being told to “focus only on studies”.
+
+Now focused on:
+
+* Artificial Intelligence
+* Data Science
+* Interactive Web Systems
+
+---
+
+## 🎯 Purpose
+
+This portfolio demonstrates:
+
+* Advanced frontend engineering
+* Real-time interactivity
+* Performance-focused animation systems
+* Integration of AI + modern web technologies
+
+It reflects **how I approach building — not just what I build**.
 
 ---
 
 ## 🧰 Tech Stack
 
-- **Next.js 14** (App Router)
-- **Tailwind CSS** — utility-first styling
-- **Framer Motion** — scroll animations, transitions, micro-interactions
-- **Three.js** — 3D particle field in hero
-- **Lenis** — buttery smooth scrolling
-- **GitHub REST API** — live stats fetching
+* Next.js (App Router)
+* Tailwind CSS
+* Framer Motion
+* Three.js
+* GSAP
+* Lenis
+* GitHub API
+
+---
+
+## ✨ Core Features
+
+* ⚡ Interactive Hero — 3D particles + glitch + parallax
+* 🧠 Animated Timeline — scroll-driven journey
+* 💻 Project Showcase — 3D tilt + cinematic expansion
+* 🧩 Skills System — orbit-based interaction
+* 🔄 Live Activity Section — dynamic updates
+* 🖱️ Custom Cursor — glow + magnetic interaction
+* 🎛️ Micro Interactions — smooth UI feedback
 
 ---
 
 ## 📁 Project Structure
 
-```
 /app
-  layout.jsx         # Root layout + fonts + metadata
-  page.jsx           # Main page orchestrating all sections
-  globals.css        # Design system: tokens, utilities, animations
+  layout.jsx        # Root layout + metadata
+  page.jsx          # Main page composition
+  globals.css       # Global styles and animations
 
 /components
-  Loader.jsx         # Cyberpunk terminal boot animation
-  CustomCursor.jsx   # Glow cursor with lagged ring
-  Navigation.jsx     # Blur navbar + mobile menu
-  Hero.jsx           # Three.js particles, glitch text, parallax
-  About.jsx          # Animated split timeline
-  Projects.jsx       # 3D tilt cards, modal overlay
-  Skills.jsx         # Orbit visualization + bar fallback
-  GitHubStats.jsx    # Live GitHub API stats + repo grid
-  Contact.jsx        # Glass card + mailto CTA
-```
+  Hero.jsx          # Hero section with 3D + glitch
+  About.jsx         # Timeline / journey
+  Projects.jsx      # Project showcase
+  Skills.jsx        # Skills visualization
+  Contact.jsx       # Contact section
 
 ---
 
-## 🚀 Local Setup
+## 🛠️ Run Locally
 
 ```bash
-# 1. Clone / unzip the project
-cd darsh-portfolio
-
-# 2. Install dependencies
 npm install
-
-# 3. Start dev server
 npm run dev
-
-# 4. Open http://localhost:3000
 ```
 
 ---
 
-## 📦 Production Build
+## 📬 Connect
 
-```bash
-npm run build
-npm start
-```
-
----
-
-## ☁️ Deploy to Vercel (Recommended)
-
-### Option A — Vercel CLI
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Inside project folder
-vercel
-
-# Follow prompts:
-# - Framework: Next.js ✓ (auto-detected)
-# - Build command: next build
-# - Output directory: .next
-```
-
-### Option B — Vercel Dashboard
-
-1. Push project to GitHub
-2. Go to [vercel.com](https://vercel.com) → New Project
-3. Import GitHub repo
-4. Vercel auto-detects Next.js — click **Deploy**
-5. Done. Live in ~90 seconds.
+* GitHub: https://github.com/DarshJaipuria
+* LinkedIn: https://www.linkedin.com/in/darshjaipuria/
+* Instagram: https://www.instagram.com/darshjaipuria
 
 ---
 
-## 🎨 Customization Cheatsheet
-
-| What to change | File | Key variable |
-|---|---|---|
-| Name / tagline | `Hero.jsx` | `DARSH`, tagline text |
-| Social links | `Hero.jsx`, `Contact.jsx` | href values |
-| Timeline story | `About.jsx` | `TIMELINE` array |
-| Projects | `Projects.jsx` | `PROJECTS` array |
-| Skills | `Skills.jsx` | `SKILLS` array |
-| GitHub username | `GitHubStats.jsx` | `USERNAME` constant |
-| Email | `Contact.jsx` | `EMAIL` constant |
-| Color palette | `globals.css` | CSS variables |
-
----
-
-## ⚡ Performance Notes
-
-- Three.js canvas lazy-initialized client-side
-- Lenis smooth scroll initialized after loader completes
-- All heavy animations use GPU-friendly `transform` and `opacity`
-- Images from GitHub API lazy loaded
-- `useInView` from Framer Motion gates all scroll animations
-
----
-
-## 🌐 Live Features
-
-- **Three.js particle field** — 2000 color particles, mouse-reactive
-- **Custom cursor** — dot + lagged ring, color shifts on hover
-- **Cyberpunk loader** — terminal typewriter boot sequence
-- **Glitch text** — random interval glitch on hero name
-- **Timeline** — split alternating cards with scroll reveal
-- **3D tilt cards** — real perspective transform on mouse move
-- **Orbit skill system** — rotating nodes with live highlight panel
-- **Live GitHub stats** — repos, followers, streak card, recent repos
-- **Glass contact card** — corner accents, shimmer button
-
----
-
-Built by Darsh Jaipuria 🚀
+**“Learning by building. Evolving by experimenting.”**
