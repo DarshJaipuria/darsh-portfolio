@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -98,7 +97,7 @@ const TIMELINE = [
 
 function TimelineCard({ item, index }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const isInView = useInView(ref, { once: false, margin: '-80px' });
   const isEven = index % 2 === 0;
   const [hovered, setHovered] = useState(false);
 
@@ -111,8 +110,11 @@ function TimelineCard({ item, index }) {
       <motion.div
         className={`flex-1 ${isEven ? 'text-right' : 'text-left'}`}
         initial={{ opacity: 0, x: isEven ? -60 : 60, rotate: isEven ? -3 : 3 }}
-        animate={isInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        animate={isInView
+          ? { opacity: 1, x: 0, rotate: 0 }
+          : { opacity: 0, x: isEven ? -60 : 60, rotate: isEven ? -3 : 3 }
+        }
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
@@ -196,7 +198,7 @@ export default function About() {
   const sectionRef = useRef(null);
   const lineRef = useRef(null);
   const titleRef = useRef(null);
-  const titleInView = useInView(titleRef, { once: true, margin: '-80px' });
+  const titleInView = useInView(titleRef, { once: false, margin: '-80px' });
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 // Three.js canvas for particle field
 function ParticleCanvas() {
@@ -218,6 +219,7 @@ function SocialIcon({ href, icon, label }) {
 
 export default function Hero() {
   const containerRef = useRef(null);
+  const router = useRouter();
 
   // Mouse parallax on elements
   useEffect(() => {
@@ -375,6 +377,13 @@ export default function Hero() {
             style={{ cursor: 'none' }}
           >
             Contact Me
+          </button>
+          <button
+            onClick={() => router.push('/about')}
+            className="btn-cyber rounded-none px-8 py-3 text-sm"
+            style={{ cursor: 'none', borderColor: 'rgba(236,72,153,0.6)', color: '#ec4899' }}
+          >
+            Know Me &amp; View CV
           </button>
         </motion.div>
 
