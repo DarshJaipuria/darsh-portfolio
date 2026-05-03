@@ -1,17 +1,32 @@
-import './globals.css';
+'use client';
 
-export const metadata = {
-  title: 'Darsh Jaipuria — Digital Architect',
-  description: 'I build things that feel alive. Portfolio of Darsh Jaipuria — AI, Data Science, and Interactive Experiences.',
-  keywords: ['Darsh Jaipuria', 'portfolio', 'developer', 'AI', 'Python', 'Three.js'],
-  openGraph: {
-    title: 'Darsh Jaipuria — Digital Architect',
-    description: 'I build things that feel alive.',
-    type: 'website',
-  },
-};
+import './globals.css';
+import { useState, useEffect } from 'react';
+import CustomCursor from '../components/CustomCursor';
 
 export default function RootLayout({ children }) {
+  const [cursorEnabled, setCursorEnabled] = useState(true);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('cursor');
+    if (saved !== null) setCursorEnabled(saved === 'true');
+
+    const onStorage = (e) => {
+      if (e.key === 'cursor') setCursorEnabled(e.newValue === 'true');
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('cursor', cursorEnabled);
+    if (cursorEnabled) {
+      document.body.classList.add('custom-cursor');
+    } else {
+      document.body.classList.remove('custom-cursor');
+    }
+  }, [cursorEnabled]);
+
   return (
     <html lang="en">
       <head>
@@ -25,6 +40,7 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#050505" />
       </head>
       <body className="antialiased overflow-x-hidden">
+        {cursorEnabled && <CustomCursor />}
         {children}
       </body>
     </html>

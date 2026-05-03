@@ -9,13 +9,7 @@ export default function CustomCursor() {
   const ring = useRef({ x: -100, y: -100 });
   const [state, setState] = useState('default'); // default | hover | text | button
 
-  // FIX 3: Add/remove cursor-none class on body so cursor is only hidden when this component is active
-  useEffect(() => {
-    document.body.classList.add('custom-cursor-active');
-    return () => {
-      document.body.classList.remove('custom-cursor-active');
-    };
-  }, []);
+  // pointer-events none is set inline; layout controls cursor: none via body.custom-cursor
 
   useEffect(() => {
     const onMove = (e) => {

@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Loader from '../components/Loader';
-import CustomCursor from '../components/CustomCursor';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import About from '../components/About';
@@ -89,7 +88,19 @@ function useDragScroll() {
 }
 
 export default function Home() {
-  const [loaded, setLoaded] = useState(false);
+  // Check sessionStorage synchronously to avoid flash
+  const [loaded, setLoaded] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !!sessionStorage.getItem('hasLoaded');
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('hasLoaded')) {
+      sessionStorage.setItem('hasLoaded', 'true');
+    }
+  }, []);
   const glitchMode = useEasterEgg();
   useDragScroll();
 
@@ -173,7 +184,6 @@ export default function Home() {
         </div>
       )}
 
-      <CustomCursor />
       {!loaded && <Loader onComplete={() => setLoaded(true)} />}
 
       <div className={`transition-opacity duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}>

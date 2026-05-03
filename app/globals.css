@@ -50,6 +50,21 @@ body {
   }
 }
 
+/* Custom cursor — only hide default when enabled */
+body.custom-cursor {
+  cursor: none !important;
+}
+body.custom-cursor a,
+body.custom-cursor button,
+body.custom-cursor [role="button"] {
+  cursor: none !important;
+}
+@media (max-width: 767px) {
+  body.custom-cursor {
+    cursor: auto !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
@@ -302,10 +317,4 @@ body {
 }
 .glow-box-pink {
   box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), 0 0 60px rgba(236, 72, 153, 0.1);
-}
-/* FIX 3: Hide default cursor only when CustomCursor component is active */
-.custom-cursor-active,
-.custom-cursor-active .btn-cyber,
-.custom-cursor-active .btn-cyber-solid {
-  cursor: none;
 }

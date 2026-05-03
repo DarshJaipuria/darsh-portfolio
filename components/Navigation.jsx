@@ -15,7 +15,26 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('');
+  const [cursorEnabled, setCursorEnabled] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const saved = localStorage.getItem('cursor');
+    if (saved !== null) setCursorEnabled(saved === 'true');
+  }, []);
+
+  const toggleCursor = () => {
+    const next = !cursorEnabled;
+    setCursorEnabled(next);
+    localStorage.setItem('cursor', next);
+    if (next) {
+      document.body.classList.add('custom-cursor');
+    } else {
+      document.body.classList.remove('custom-cursor');
+    }
+    // tell layout to re-read — dispatch storage event
+    window.dispatchEvent(new StorageEvent('storage', { key: 'cursor', newValue: String(next) }));
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -85,6 +104,21 @@ export default function Navigation() {
               />
             </button>
           ))}
+
+          <button
+            onClick={toggleCursor}
+            className="text-xs font-mono px-3 py-1.5 rounded-lg transition-all"
+            style={{
+              background: cursorEnabled ? 'rgba(168,85,247,0.1)' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${cursorEnabled ? 'rgba(168,85,247,0.4)' : 'rgba(255,255,255,0.1)'}`,
+              color: cursorEnabled ? '#a855f7' : 'rgba(226,232,240,0.3)',
+              cursor: 'none',
+              letterSpacing: '0.05em',
+            }}
+            title="Toggle custom cursor"
+          >
+            {cursorEnabled ? '⬤ CURSOR' : '○ CURSOR'}
+          </button>
 
           <button
             onClick={() => router.push('/about')}
