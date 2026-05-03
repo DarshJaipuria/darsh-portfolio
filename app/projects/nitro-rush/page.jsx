@@ -194,10 +194,19 @@ export default function NitroRushPage() {
             </button>
 
             <iframe
-              src="/games/nitro-rush/index.html"
-              sandbox="allow-scripts allow-same-origin allow-popups"
-              allow="autoplay"
-              className="w-full h-[80vh] max-h-[700px]"
+                src="/games/nitro-rush/index.html"
+                sandbox="allow-scripts allow-same-origin allow-popups"
+                allow="autoplay"
+                className="w-full h-[80vh] max-h-[700px] rounded-2xl border-none"
+                style={{ cursor: "default" }}
+                onMouseEnter={() => {
+                  document.body.classList.add("no-custom-cursor");
+                  document.body.style.cursor = "auto";
+                }}
+                onMouseLeave={() => {
+                  document.body.classList.remove("no-custom-cursor");
+                  document.body.style.cursor = "none";
+                }}
             />
           </div>
         </section>

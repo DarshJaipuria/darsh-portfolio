@@ -318,3 +318,9 @@ body.custom-cursor [role="button"] {
 .glow-box-pink {
   box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), 0 0 60px rgba(236, 72, 153, 0.1);
 }
+
+.no-custom-cursor .cursor-dot,
+.no-custom-cursor .cursor-ring {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
