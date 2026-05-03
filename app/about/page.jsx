@@ -163,6 +163,22 @@ export default function AboutPage() {
           >
             ↓ DOWNLOAD CV
           </motion.a>
+
+          <motion.a
+            href="/certificates"
+            className="mt-4 inline-flex items-center gap-2 px-6 py-2 rounded-lg font-black text-sm tracking-widest text-white transition-all hover:-translate-y-0.5"
+            style={{
+              fontFamily: 'Orbitron, monospace',
+              background: 'linear-gradient(135deg, #06b6d4, #a855f7)',
+              boxShadow: '0 0 20px rgba(6,182,212,0.35)',
+              cursor: 'none',
+            }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            📜 VIEW CERTIFICATES
+          </motion.a>
         </motion.div>
 
         {/* ── RIGHT: Content ── */}

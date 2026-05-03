@@ -35,6 +35,7 @@ const HOW = [
 ];
 
 export default function NitroRushPage() {
+  const router = useRouter();
   const [showGame, setShowGame] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileWarning, setShowMobileWarning] = useState(false);
