@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
@@ -34,6 +35,7 @@ const HOW = [
 ];
 
 export default function NitroRushPage() {
+  const [showGame, setShowGame] = useState(false);
   const router = useRouter();
 
   return (
@@ -92,6 +94,20 @@ export default function NitroRushPage() {
 
           {/* CTA buttons */}
           <motion.div {...fadeUp(0.25)} className="flex flex-wrap items-center justify-center gap-4">
+
+            <button
+              onClick={() => setShowGame(true)}
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-black text-sm tracking-widest text-white transition-all hover:-translate-y-0.5"
+              style={{
+                fontFamily: 'Orbitron, monospace',
+                background: 'linear-gradient(135deg, #22c55e, #06b6d4)',
+                boxShadow: '0 0 24px rgba(34,197,94,0.4)',
+                cursor: 'none',
+              }}
+            > 
+              ▶ PLAY DEMO
+            </button>
+
             <a
               href="https://github.com/DarshJaipuria/nitro-rush-3d"
               target="_blank"
@@ -103,6 +119,7 @@ export default function NitroRushPage() {
                 boxShadow: '0 0 24px rgba(236,72,153,0.4)',
                 cursor: 'none',
               }}
+              
             >
               <GithubIcon /> VIEW GITHUB
             </a>
@@ -122,6 +139,27 @@ export default function NitroRushPage() {
           </motion.div>
         </motion.div>
       </section>
+
+      {showGame && (
+        <section className="px-6 pb-20">
+          <div className="max-w-6xl mx-auto relative">
+
+            <button
+              onClick={() => setShowGame(false)}
+              className="absolute top-2 right-2 z-10 px-4 py-1 rounded bg-black/70 text-white text-sm"
+            >
+              ✕ CLOSE
+            </button>
+
+            <iframe
+              src="/games/nitro-rush/index.html"
+              sandbox="allow-scripts allow-same-origin allow-popups"
+              allow="autoplay"
+              className="w-full h-[80vh] max-h-[700px]"
+            />
+          </div>
+        </section>
+      )}
 
       {/* OVERVIEW */}
       <Section>
