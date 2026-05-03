@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
@@ -36,7 +36,19 @@ const HOW = [
 
 export default function NitroRushPage() {
   const [showGame, setShowGame] = useState(false);
-  const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <div style={{ background: '#050505', minHeight: '100vh', color: '#e2e8f0', fontFamily: 'Rajdhani, sans-serif', overflowX: 'hidden' }}>
@@ -96,7 +108,13 @@ export default function NitroRushPage() {
           <motion.div {...fadeUp(0.25)} className="flex flex-wrap items-center justify-center gap-4">
 
             <button
-              onClick={() => setShowGame(true)}
+              onClick={() => {
+                if (isMobile) {
+                  setShowMobileWarning(true);
+                } else {
+                  setShowGame(true);
+                }
+              }}
               className="inline-flex items-center gap-2 px-8 py-3 rounded-lg font-black text-sm tracking-widest text-white transition-all hover:-translate-y-0.5"
               style={{
                 fontFamily: 'Orbitron, monospace',
@@ -139,6 +157,29 @@ export default function NitroRushPage() {
           </motion.div>
         </motion.div>
       </section>
+
+      {showMobileWarning && (
+        <section className="px-6 pb-20">
+          <div className="max-w-md mx-auto text-center p-6 rounded-2xl bg-black/60 border border-purple-500/30">
+
+            <h2 className="text-xl font-bold text-white mb-2">
+              ⚠ Desktop Only
+            </h2>
+
+            <p className="text-gray-300 text-sm mb-4">
+              Nitro Rush demo is optimized for desktop and not playable on mobile.
+            </p>
+
+            <button
+              onClick={() => setShowMobileWarning(false)}
+              className="px-5 py-2 rounded bg-purple-500 text-white"
+            >
+              OK
+            </button>
+
+          </div>
+        </section>
+      )}
 
       {showGame && (
         <section className="px-6 pb-20">
