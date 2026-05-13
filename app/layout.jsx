@@ -3,6 +3,7 @@
 import './globals.css';
 import { useState, useEffect } from 'react';
 import CustomCursor from '../components/CustomCursor';
+import { Analytics } from '@vercel/analytics/next';
 
 export default function RootLayout({ children }) {
   const [cursorEnabled, setCursorEnabled] = useState(true);
@@ -42,6 +43,7 @@ export default function RootLayout({ children }) {
       <body className="antialiased overflow-x-hidden">
         {cursorEnabled && <CustomCursor />}
         {children}
+        <Analytics />
       </body>
     </html>
   );
