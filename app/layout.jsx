@@ -38,6 +38,38 @@ export default function RootLayout({ children }) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#050505" />
+
+        <meta
+          property="og:title"
+          content="🚀 AI & Data Science Portfolio | Darsh Jaipuria"
+        />
+
+        <meta
+          property="og:description"
+          content="A collection of my real-world projects in AI, Python, and data science."
+        />
+
+        <meta
+          property="og:image"
+          content="https://darshjaipuria.vercel.app/preview.png"
+        />
+
+        <meta
+          property="og:url"
+          content="https://darshjaipuria.vercel.app"
+        />
+
+        <meta property="og:type" content="website" />
+
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+
+        <meta
+          name="twitter:image"
+          content="https://darshjaipuria.vercel.app/preview.png"
+        />
       </head>
       <body className="antialiased overflow-x-hidden">
         {cursorEnabled && <CustomCursor />}
