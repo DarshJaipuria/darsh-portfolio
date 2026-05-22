@@ -53,6 +53,19 @@ export default function RootLayout({ children }) {
           property="og:image"
           content="https://darshjaipuria.vercel.app/preview.png"
         />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+
+        <meta
+          name="twitter:image"
+          content="https://darshjaipuria.vercel.app/preview.png"
+        />
+
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
 
         <meta
           property="og:url"
