@@ -53,6 +53,7 @@ export default function RootLayout({ children }) {
           property="og:image"
           content="https://darshjaipuria.vercel.app/preview.png"
         />
+        <meta property="og:image:secure_url" content="https://darshjaipuria.vercel.app/preview.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
