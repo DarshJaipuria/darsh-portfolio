@@ -12,7 +12,10 @@ const SKILLS = [
   { name: 'Jupyter',         level: 82, color: '#f59e0b', icon: '📓', desc: 'Data exploration, visualization, reproducible science.', category: 'Tools',    projects: [] },
   { name: 'Scikit-learn',    level: 75, color: '#06b6d4', icon: '🤖', desc: 'ML pipelines, classification, regression, clustering.', category: 'AI/ML',    projects: [] },
   { name: 'Data Storytelling',level: 80, color: '#ec4899', icon: '📊', desc: 'Turning raw data into compelling, actionable narratives.', category: 'Soft Skill', projects: [] },
-  { name: 'Data Quality',    level: 78, color: '#10b981', icon: '✅', desc: 'Data cleaning, validation, preprocessing, QA.', category: 'Data',     projects: [] },
+  { name: 'Pandas', level: 84, color: '#150458', icon: '🐼', desc: 'Data manipulation, cleaning, transformation, and analysis using Python Pandas.', category: 'Data', projects: [] },
+  { name: 'Data Analysis', level: 82, color: '#FF6F00', icon: '📊', desc: 'Exploring datasets, extracting insights, statistical understanding, and analytical workflows.', category: 'Data', projects: [] },
+  { name: 'Web Scraping', level: 76, color: '#FF9800', icon: '🕸️', desc: 'Collecting and extracting structured data from websites using Python automation.', category: 'Data', projects: [] },
+  { name: 'Data Visualization', level: 80, color: '#4CAF50', icon: '📈', desc: 'Creating dashboards, charts, and visual insights using Python libraries.', category: 'Data', projects: [] },
 ];
 
 export default function Skills() {

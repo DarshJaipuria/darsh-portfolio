@@ -6,6 +6,19 @@ import { useState, useEffect } from 'react';
 
 const certificates = [
   {
+    title: "Python Project for Data Science",
+    issuer: "IBM (Coursera)",
+    date: "May 2026",
+    image: "/certs/ibm-pyproj_ds.jpg",
+    learnings: [
+      "Applied Python for real-world Data Science and Data Analysis projects",
+      "Worked with Pandas for data manipulation and analysis",
+      "Built dashboards and visualizations using Python libraries",
+      "Performed web scraping and data collection using BeautifulSoup",
+      "Used Jupyter Notebook for project development and workflows",
+    ],
+  },
+  {
     title: "Python for Data Science, AI & Development",
     issuer: "IBM (Coursera)",
     date: "May 2026",
