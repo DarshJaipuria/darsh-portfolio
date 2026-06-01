@@ -3,19 +3,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
+import Link from 'next/link';
 
 const PROJECTS = [
   {
     id: 1,
-    title: 'Hand Cricket',
-    subtitle: 'Game Engine',
-    desc: 'A fully functional Hand Cricket game built in Python with complete game logic, player vs CPU mode, scoring system, and terminal-based UI.',
-    longDesc: 'Hand Cricket brings the classic schoolyard game into the digital world. Built with pure Python — complete game logic, intelligent CPU moves, live score tracking, innings management, and a polished terminal interface with colored output.',
-    tech: ['Python', 'Game Logic', 'Terminal UI', 'OOP'],
-    link: 'https://github.com/DarshJaipuria/hand-cricket-python',
+    title: 'Neon Void',
+    subtitle: '2D Arcade Engine',
+    desc: 'A fast-paced 2D space shooter built for Harvard\'s CS50. Engineered from scratch featuring infinite parallax scrolling, a localized vector particle engine, and state-driven boss mechanics.',
+    longDesc: 'Neon Void is a custom 2D arcade space shooter. I built this game engine from scratch, focusing on state machine logic, memory management, and advanced mathematical rendering techniques, bypassing standard visual block constraints.',
+    tech: ['Scratch', 'Game Engine', 'State Machines', 'CS50'],
+    link: 'https://github.com/DarshJaipuria/neon-void',
     color: '#a855f7',
     accent: '#ec4899',
-    icon: '🏏',
+    icon: '🚀',
     category: 'GAME',
     gradient: 'radial-gradient(ellipse 80% 60% at 40% 30%, rgba(168,85,247,0.15), transparent 60%)',
   },
@@ -159,6 +160,23 @@ function TiltCard({ project, onClick, onHover, onShowcase }) {
               GitHub
             </a>
           </div>
+          {project.id === 1 && (
+            <Link href="/projects/neon-void" className="w-full mt-4 block">
+              <button
+                onClick={(e) => e.stopPropagation()}
+                className="w-full py-2 rounded-lg text-xs font-black tracking-widest text-white transition-all hover:-translate-y-0.5"
+                style={{
+                  fontFamily: 'Orbitron, monospace',
+                  background: 'linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.2))',
+                  border: '1px solid rgba(168,85,247,0.35)',
+                  color: '#a855f7',
+                  cursor: 'none',
+                }}
+              >
+                🚀 FULL SHOWCASE →
+              </button>
+            </Link>
+          )}
           {project.id === 3 && onShowcase && (
             <button
               onClick={(e) => { e.stopPropagation(); onShowcase(); }}
