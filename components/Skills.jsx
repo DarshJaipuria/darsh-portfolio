@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 
 const SKILLS = [
+  {name: 'SQL',              level: 80, color: '#336791', icon: '🗄️', desc: 'Writing queries, joins, views, transactions, and relational database operations for data analysis and management.', category: 'Data', projects: []},
   { name: 'Python',          level: 90, color: '#3b82f6', icon: '🐍', desc: 'Primary language. AI, data science, automation, scripting.', category: 'Language',  projects: ['Face Auth System', 'Hand Cricket'] },
   { name: 'HTML / CSS',      level: 85, color: '#f97316', icon: '🌐', desc: 'Semantic HTML5, modern CSS with animations and layouts.', category: 'Frontend',  projects: [] },
   { name: 'JavaScript',      level: 80, color: '#eab308', icon: '⚡', desc: 'DOM manipulation, async patterns, and browser APIs.', category: 'Language',  projects: ['Nitro Rush 3D'] },
