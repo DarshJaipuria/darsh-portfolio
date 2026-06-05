@@ -6,6 +6,19 @@ import { useState, useEffect } from 'react';
 
 const certificates = [
   {
+    title: "Databases and SQL for Data Science with Python",
+    issuer: "IBM (Coursera)",
+    date: "June 2026",
+    image: "/certs/ibm-database-for-py.jpg",
+    learnings: [
+      "Analyzed data within databases using SQL and Python",
+      "Created relational databases and managed multiple tables",
+      "Constructed SQL queries using DDL and DML commands",
+      "Worked with joins, views, transactions, and stored procedures",
+      "Applied SQL techniques for data analysis and database management",
+    ],
+  },
+  {
     title: "Python Project for Data Science",
     issuer: "IBM (Coursera)",
     date: "May 2026",
