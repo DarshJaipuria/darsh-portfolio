@@ -11,12 +11,11 @@ const SKILLS = [
   { name: 'Three.js',        level: 72, color: '#a855f7', icon: '🎮', desc: '3D graphics in the browser. WebGL-powered scenes, particles.', category: 'Graphics', projects: ['Nitro Rush 3D'] },
   { name: 'GitHub',          level: 88, color: '#e2e8f0', icon: '🐙', desc: 'Version control, branching strategies, CI/CD workflows.', category: 'Tools',    projects: [] },
   { name: 'Jupyter',         level: 82, color: '#f59e0b', icon: '📓', desc: 'Data exploration, visualization, reproducible science.', category: 'Tools',    projects: [] },
-  { name: 'Scikit-learn',    level: 75, color: '#06b6d4', icon: '🤖', desc: 'ML pipelines, classification, regression, clustering.', category: 'AI/ML',    projects: [] },
-  { name: 'Data Storytelling',level: 80, color: '#ec4899', icon: '📊', desc: 'Turning raw data into compelling, actionable narratives.', category: 'Soft Skill', projects: [] },
-  { name: 'Pandas', level: 84, color: '#150458', icon: '🐼', desc: 'Data manipulation, cleaning, transformation, and analysis using Python Pandas.', category: 'Data', projects: [] },
-  { name: 'Data Analysis', level: 82, color: '#FF6F00', icon: '📊', desc: 'Exploring datasets, extracting insights, statistical understanding, and analytical workflows.', category: 'Data', projects: [] },
-  { name: 'Web Scraping', level: 76, color: '#FF9800', icon: '🕸️', desc: 'Collecting and extracting structured data from websites using Python automation.', category: 'Data', projects: [] },
-  { name: 'Data Visualization', level: 80, color: '#4CAF50', icon: '📈', desc: 'Creating dashboards, charts, and visual insights using Python libraries.', category: 'Data', projects: [] },
+  { name: 'Pandas',          level: 84, color: '#150458', icon: '🐼', desc: 'Data manipulation, cleaning, transformation, and analysis using Python Pandas.', category: 'Data', projects: [] },
+  { name: 'Data Analysis',   level: 82, color: '#FF6F00', icon: '📊', desc: 'Exploring datasets, extracting insights, statistical understanding, and analytical workflows.', category: 'Data', projects: [] },
+  { name: 'Data Visualization',  level: 80, color: '#4CAF50', icon: '📈', desc: 'Creating dashboards, charts, and visual insights using Python libraries.', category: 'Data', projects: [] },
+  { name: 'Machine Learning',     level: 75, color: '#FF6F00', icon: '🤖', desc: 'Building and evaluating machine learning models for classification, regression, clustering, and prediction.', category: 'AI/ML', projects: [] },
+  {name: 'API Integration',      level: 65, color: '#009688', icon: '🔗', desc: 'Working with APIs to collect, exchange, and integrate data between applications and services.', category: 'Development', projects: [] }
 ];
 
 export default function Skills() {
